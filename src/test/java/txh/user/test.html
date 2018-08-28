@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+</head>
+<body>
+    <button id="addUser" >点击</button>
+    <button id="getInfo">get</button>
+    <input type="text" id="getlistInput"/><button id="getList">list</button>
+    <input type="text" id="login" placeholder="请输入登录名"/>
+    <input type="text" id="password" placeholder="请输入密码"/>
+    <button id="loginFunction">登录</button>
+</body>
+<script>
+
+
+    $(document).ready(function(){
+
+        $("#addUser").click(function(){
+            var data = {
+                name : "zs",
+                login : "login",
+                password : "123456",
+            }
+
+            $.ajax({
+                url : "http://localhost:8080/user/add",
+                type : "POST",
+                data : JSON.stringify(data),
+                dataType : 'json',
+                contentType : 'application/json;charset=utf-8',
+                success : function(){
+                    alert("ok");
+                },
+                error : function(){
+                    alert("error");
+                }
+            });
+        });
+
+
+        $("#getInfo").click(function(){
+            $.ajax({
+                url:"http://localhost:8080/user/get",
+                type:"get",
+                //data:JSON.stringify(data),
+                dataType:'json',
+                contentType:'application/json;charset=utf-8',
+                success:function(
+                ){
+                    alert("ok");
+                },
+                error:function(){
+                    alert("error");
+                }
+            });
+
+        });
+
+        $("#getList").click(function(){
+            var name=$("#getlistInput").val();
+            var data={
+                name:name,
+                id:"0"
+            }
+            $.ajax({
+                url:"http://localhost:8080/user/getAll",
+                type:"post",
+                data:JSON.stringify(data),
+                dataType : 'json',
+                contentType : 'application/json;charset=utf-8',
+                success:function(
+                ){
+                    alert("ok");
+                },
+                error:function(){
+                    alert("error");
+                }
+            });
+
+        });
+
+
+        $("#loginFunction").click(function(){
+            var data={
+                login:$("#login").val(),
+                password:$("#password").val()
+            }
+            $.ajax({
+                type:'POST',
+                url:'http://localhost:8080/user/login',
+                dataType:'json',
+                contentType: 'application/json;charset=utf-8',
+                data:JSON.stringify(data),
+                success:function(datasource){
+                    if(datasource.statusCode==200){
+                        alert(datasource.messege);
+                    }else{
+                        alert(datasource.messege);
+                    }
+
+                },
+                error:function(){
+                    alert("请求失败");
+                }
+
+            })
+        })
+    });
+</script>
+</html>
