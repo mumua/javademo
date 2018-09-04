@@ -1,9 +1,9 @@
 package txh.user.service;
 
 
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
-import txh.user.entity.StatusObj;
-import txh.user.entity.User;
+import txh.user.entity.*;
 import txh.user.dao.UserDao;
 
 import javax.annotation.Resource;
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService{
             statusObj.setData(list);
         }else{
             statusObj.setMessege("0 list");
-            statusObj.setStatusCode(2001);
+            statusObj.setStatusCode(200);
         }
 
 
@@ -86,7 +86,47 @@ public class UserServiceImpl implements UserService{
         return statusObj;
     }
 
+    //@Override
+   // public StatusObj findUserList(Integer page, Integer size, User dto) {
+    //    StatusObj statusObj=new StatusObj(200,"is ok");
+    //    List<User> arr=userDao.findAll();
 
+   //     return statusObj;
+   // }
+
+    @Override
+    public  StatusObj detele(String id){
+        StatusObj statusObj=new StatusObj(200,"is ok");
+        userDao.deleteById(id);
+        return  statusObj;
+    }
+
+    @Override
+    public StatusObj findAll(User dto, PageRequest pageInfo) {
+        StatusObj statusObj=new StatusObj(200,"is ok");
+        PageList<User> pageList=new PageList<>();
+
+        ExampleMatcher matcher = ExampleMatcher.matching() //构建对象
+                .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains()) //姓名采用“开始匹配”的方式查询
+                .withIgnorePaths("id");
+
+        Example<User> example = Example.of(dto,matcher);
+
+        Page<User> users= userDao.findAll(example,pageInfo);
+
+         statusObj.setData(users.getContent());
+        PageInfo pageInfos=new PageInfo();
+        pageList.setDatasource(users.getContent());
+        System.out.println("总记录数: " + users.getTotalElements());
+        System.out.println("总记录数: " + (int)users.getTotalElements());
+        pageInfos.setTotal((int)users.getTotalElements());
+        pageInfos.setSize(users.getSize());
+        pageInfos.setCurrent(users.getNumber());
+        pageList.setPageInfo(pageInfos);
+        statusObj.setPageList(pageList);
+
+        return statusObj;
+    }
 
 
 }

@@ -10,6 +10,7 @@ public class StatusObj <T>{
     private  int statusCode;
     private String messege;
     private List<T> data;
+    private PageList<T> pageList;
 
     public StatusObj(int statusCode){
         this.statusCode=statusCode;
@@ -28,6 +29,14 @@ public class StatusObj <T>{
         this.statusCode=statusCode;
         this.messege=messege;
         this.data=data;
+    }
+    public StatusObj(int statusCode,String messege ,PageList<T> pageList){
+        this.statusCode=statusCode;
+        this.messege=messege;
+        this.pageList=pageList;
+    }
+    public StatusObj(PageList<T> pageList){
+        this.pageList=pageList;
     }
     public StatusObj(List<T> data){
         this.data=data;
@@ -53,5 +62,12 @@ public class StatusObj <T>{
 
     public void setData(List<T> data) {
         this.data = data;
+    }
+
+    public  PageList getPageList(){
+        return  pageList;
+    }
+    public  void setPageList(PageList<T> pageList){
+        this.pageList=pageList;
     }
 }

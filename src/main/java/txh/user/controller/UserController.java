@@ -1,15 +1,17 @@
 package txh.user.controller;
 
 
-import com.sun.deploy.net.HttpResponse;
-import org.springframework.http.HttpRequest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import txh.user.entity.StatusObj;
 import txh.user.entity.User;
+import txh.user.entity.UserPage;
 import txh.user.service.UserService;
 
 import javax.annotation.Resource;
-import java.util.List;
+import javax.persistence.Id;
+import javax.transaction.Transactional;
+
 
 /**
  * Created by lxl on 2018/8/7.
@@ -47,13 +49,28 @@ public class UserController {
     @CrossOrigin(methods = {RequestMethod.GET,RequestMethod.POST},origins = "*")
     public StatusObj getAll(@RequestBody User dto){
         return userService.getInfo(dto.getId(),dto.getName());
+    }
+
+    @RequestMapping(value = "/getByPage",method = RequestMethod.POST)
+    @CrossOrigin(methods ={RequestMethod.GET,RequestMethod.POST},origins = "*" )
+    public StatusObj getByList(@RequestBody UserPage userPage){
+        return userService.findAll(userPage.getUser(),new PageRequest(userPage.getPageInfo().getCurrent(), userPage.getPageInfo().getSize()));
 
     }
+
 
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     @CrossOrigin(methods = {RequestMethod.GET,RequestMethod.POST},origins = "*")
     public StatusObj login(@RequestBody User dto){
         return  userService.login(dto.getLogin(),dto.getPassword());
+    }
+
+    // @requestparam(id) String id
+   @Transactional
+    @RequestMapping(value = "/delete/{id}",method = RequestMethod.GET)
+    @CrossOrigin(methods = {RequestMethod.GET,RequestMethod.POST},origins = "*")
+    public StatusObj delete( @PathVariable  String id){
+        return  userService.detele(id);
     }
 
 
